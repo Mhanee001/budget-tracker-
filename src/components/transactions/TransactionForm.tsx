@@ -18,7 +18,7 @@ export interface Transaction {
 }
 
 interface TransactionFormProps {
-  onAddTransaction: (transaction: Omit<Transaction, 'id'>) => void;
+  onAddTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void> | void;
 }
 
 const categories = {

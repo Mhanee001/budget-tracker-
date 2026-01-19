@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LandingPage } from "@/components/landing/LandingPage";
 import { Header } from "@/components/layout/Header";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -6,35 +6,34 @@ import { TransactionForm, Transaction } from "@/components/transactions/Transact
 import { TransactionList } from "@/components/transactions/TransactionList";
 import { BalanceChart } from "@/components/dashboard/BalanceChart";
 import { formatCurrency } from "@/lib/formatters";
-import { DollarSign, TrendingUp, TrendingDown, Wallet } from "lucide-react";
+import { useTransactions } from "@/hooks/useTransactions";
+import { DollarSign, TrendingUp, TrendingDown, Wallet, Loader2 } from "lucide-react";
 
 const Index = () => {
-  // ALL HOOKS MUST BE CALLED FIRST - BEFORE ANY CONDITIONAL RETURNS
   const [showDashboard, setShowDashboard] = useState(false);
-  const [transactions, setTransactions] = useState<Transaction[]>(() => {
-    const saved = localStorage.getItem('transactions');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem('transactions', JSON.stringify(transactions));
-  }, [transactions]);
+  const { transactions, loading, addTransaction, deleteTransaction } = useTransactions();
 
   const handleAuthSuccess = () => {
     setShowDashboard(true);
   };
 
-  // CONDITIONAL RENDERING AFTER ALL HOOKS
   if (!showDashboard) {
     return <LandingPage onAuthSuccess={handleAuthSuccess} />;
   }
 
-  const handleAddTransaction = (newTransaction: Omit<Transaction, 'id'>) => {
-    const transaction: Transaction = {
-      ...newTransaction,
-      id: Date.now().toString(),
-    };
-    setTransactions(prev => [...prev, transaction]);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading your transactions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handleAddTransaction = async (newTransaction: Omit<Transaction, 'id'>) => {
+    await addTransaction(newTransaction);
   };
 
   // Calculate totals
