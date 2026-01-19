@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+# GameGambit Finance Tracker
 
-## Project info
+A personal finance management app built with React and Firebase for tracking income and expenses in real-time.
 
-**URL**: https://lovable.dev/projects/0579f34b-58c6-438d-9c9e-449c1421b8a4
+## Features
 
-## How can I edit this code?
+- 📊 **Dashboard Overview** - View total balance, monthly income/expenses, and transaction count
+- 💰 **Transaction Management** - Add income and expense transactions with categories
+- 📈 **Visual Charts** - Track your financial trends over time
+- 🔄 **Real-time Sync** - Data syncs instantly across devices via Firebase Firestore
+- 🎨 **Modern UI** - Clean, responsive design with dark mode support
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend**: React, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui
+- **Backend**: Firebase (Firestore, Auth, Storage)
+- **Charts**: Recharts
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0579f34b-58c6-438d-9c9e-449c1421b8a4) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js & npm - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Firebase project with Firestore enabled
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to the project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Firebase Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The app is pre-configured with Firebase. To use your own Firebase project:
 
-**Use GitHub Codespaces**
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
+2. Enable Firestore Database
+3. Update the config in `src/lib/firebase.ts` with your credentials
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Firestore Security Rules
 
-## What technologies are used for this project?
+For production, set up proper security rules in Firebase Console:
 
-This project is built with:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /transactions/{document} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Project Structure
 
-## How can I deploy this project?
+```
+src/
+├── components/
+│   ├── dashboard/      # Stats cards and charts
+│   ├── landing/        # Landing page components
+│   ├── layout/         # Header and navigation
+│   ├── transactions/   # Transaction form and list
+│   └── ui/             # Reusable UI components
+├── hooks/
+│   └── useTransactions.ts  # Firestore data hook
+├── lib/
+│   ├── firebase.ts     # Firebase configuration
+│   └── formatters.ts   # Utility functions
+└── pages/
+    └── Index.tsx       # Main application page
+```
 
-Simply open [Lovable](https://lovable.dev/projects/0579f34b-58c6-438d-9c9e-449c1421b8a4) and click on Share -> Publish.
+## Deployment
 
-## Can I connect a custom domain to my Lovable project?
+Deploy easily via [Lovable](https://lovable.dev/projects/0579f34b-58c6-438d-9c9e-449c1421b8a4):
 
-Yes, you can!
+1. Click **Share** → **Publish**
+2. Optionally connect a custom domain in **Project** → **Settings** → **Domains**
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT
